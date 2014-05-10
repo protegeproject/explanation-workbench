@@ -29,6 +29,10 @@
 		<developerConnection>scm:git:git@github.com:protegeproject/explanation-workbench.git</developerConnection>
 		<url>https://github.com/protegeproject/explanation-workbench</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/protegeproject/explanation-workbench/issues</url>
+	</issueManagement>	
 
 	<dependencies>
         <dependency>
