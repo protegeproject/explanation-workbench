@@ -10,7 +10,7 @@
 	
 	<groupId>edu.stanford.protege</groupId>	
 	<artifactId>org.protege.explanation</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<name>Explanation Workbench</name>
