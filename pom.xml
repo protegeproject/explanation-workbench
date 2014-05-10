@@ -34,6 +34,13 @@
 		<url>https://github.com/protegeproject/explanation-workbench/issues</url>
 	</issueManagement>	
 
+	<repositories>
+        <repository>
+            <id>github</id>
+            <url>https://github.com/protegeproject/mvn-repo/raw/master/releases</url>
+        </repository>
+    </repositories>
+    
 	<dependencies>
         <dependency>
 			<groupId>edu.stanford.protege</groupId>
@@ -57,11 +64,9 @@
 			<groupId>org.semanticweb.owl</groupId>
 			<artifactId>explanation</artifactId>
 			<version>3.3.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/explanation-3.3.0.jar</systemPath>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
             <plugin>
