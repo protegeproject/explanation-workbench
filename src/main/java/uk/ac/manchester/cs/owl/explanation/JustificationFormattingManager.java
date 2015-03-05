@@ -34,8 +34,8 @@ import uk.ac.manchester.cs.bhig.util.Tree;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 23-Oct-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 23-Oct-2008
  */
 public class JustificationFormattingManager {
 

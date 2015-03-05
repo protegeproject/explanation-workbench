@@ -12,9 +12,9 @@ import java.awt.*;
 import java.util.Set;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
  * Date: 19/03/2012
  */
 public class JustificationFrameExplanationDisplay extends JPanel implements ExplanationDisplay, AxiomSelectionListener {

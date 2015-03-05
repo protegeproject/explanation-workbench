@@ -3,9 +3,9 @@ package uk.ac.manchester.cs.owl.explanation;
 import uk.ac.manchester.cs.owl.explanation.JustificationType;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
  * Date: 20/03/2012
  */
 public class WorkbenchSettings {

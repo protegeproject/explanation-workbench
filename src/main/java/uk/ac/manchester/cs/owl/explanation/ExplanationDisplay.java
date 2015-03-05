@@ -30,8 +30,8 @@ import java.util.Set;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 03-Oct-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 03-Oct-2008
  *
  * An interface to a component that can display justifications.
  */

@@ -28,9 +28,9 @@ import org.semanticweb.owlapi.reasoner.*;
  */
 
 /**
- * Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
+ * Author: Matthew Horridge
+ * The University of Manchester
+ * Information Management Group
  * Date: 06-Apr-2010
  */
 public class ProtegeOWLReasonerFactoryWrapper implements OWLReasonerFactory {

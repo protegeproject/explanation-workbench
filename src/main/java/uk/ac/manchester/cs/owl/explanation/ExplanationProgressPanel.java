@@ -34,9 +34,9 @@ import java.awt.event.ActionEvent;
  */
 
 /**
- * Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
+ * Author: Matthew Horridge
+ * The University of Manchester
+ * Information Management Group
  * Date: 14-Oct-2009
  */
 public class ExplanationProgressPanel extends JPanel implements ExplanationProgressMonitor<OWLAxiom> {

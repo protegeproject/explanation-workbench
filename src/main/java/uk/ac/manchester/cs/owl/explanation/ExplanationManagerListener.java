@@ -26,8 +26,8 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 04-Oct-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 04-Oct-2008
  */
 public interface ExplanationManagerListener {
 

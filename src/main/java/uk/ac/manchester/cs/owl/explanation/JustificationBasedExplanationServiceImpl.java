@@ -6,9 +6,9 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
+ * Author: Matthew Horridge
+ * Stanford University
+ * Bio-Medical Informatics Research Group
  * Date: 18/03/2012
  */
 public class JustificationBasedExplanationServiceImpl extends ExplanationService {

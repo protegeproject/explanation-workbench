@@ -28,8 +28,8 @@ import java.util.Set;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 09-Oct-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 09-Oct-2008
  */
 public interface AxiomSelectionModel {
 

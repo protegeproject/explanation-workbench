@@ -27,8 +27,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 26-Sep-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 26-Sep-2008
  */
 public interface OWLReasonerProvider {
 

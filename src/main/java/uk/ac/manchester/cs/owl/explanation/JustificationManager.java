@@ -46,8 +46,8 @@ import javax.swing.*;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 03-Oct-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 03-Oct-2008
  * Manages aspects of explanation in Protege 4.
  */
 public class JustificationManager implements Disposable, OWLReasonerProvider {
@@ -132,6 +132,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     /**
      * Gets the number of explanations that have actually been computed for an entailment
      * @param entailment The entailment
+     * @param type The type of justification to be counted.
      * @return The number of computed explanations.  If no explanations have been computed this value
      *         will be -1.
      */

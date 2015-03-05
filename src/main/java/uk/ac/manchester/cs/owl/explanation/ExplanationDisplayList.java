@@ -36,8 +36,8 @@ import java.awt.event.ActionEvent;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 19-Oct-2008<br><br>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 19-Oct-2008
  */
 public class ExplanationDisplayList extends JPanel implements Disposable {
 

@@ -46,9 +46,8 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 
 
 /**
- * Author: Matthew Horridge<br> The University Of Manchester<br> Information Management Group<br> Date:
- * 04-Oct-2008<br><br>
- * <p/>
+ * Author: Matthew Horridge The University Of Manchester Information Management Group Date:
+ * 04-Oct-2008
  * Displays a set of explanations
  */
 public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManagerListener, EntailmentSelectionListener, AxiomSelectionModel, ExplanationManagerListener {
