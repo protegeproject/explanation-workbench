@@ -40,12 +40,16 @@ import java.net.URI;
  */
 public class ExplanationUtil {
 
-    public static void saveExplanationAsOntology(OWLEditorKit editorKit, Explanation explanation) throws
+    public static void saveExplanationAsOntology(OWLEditorKit editorKit, Explanation<?> explanation) throws
                                                                                                    OWLOntologyCreationException,
                                                                                                    OWLOntologyChangeException,
                                                                                                    OWLOntologyStorageException {
-        File f = UIUtil.saveFile((JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, editorKit.getWorkspace()), "Save ontology as",
-                        CollectionFactory.createSet("owl", "txt", "rdf"), "JustificationExtract.owl");
+        File f = UIUtil.saveFile(
+                SwingUtilities.getAncestorOfClass(JFrame.class, editorKit.getWorkspace()),
+                "Save ontology as",
+                "Save justification as ontology",
+                CollectionFactory.createSet("owl", "txt", "rdf"),
+                "justification.owl");
         if(f == null) {
             return;
         }
@@ -55,7 +59,7 @@ public class ExplanationUtil {
         IRI annotationIRI = IRI.create("http://owl.cs.manchester.ac.uk/explanation/annotations/inferredAxiom");
         String entailmentRendering = editorKit.getOWLModelManager().getRendering((OWLAxiom) explanation.getEntailment());
         OWLAnnotationProperty prop = df.getOWLAnnotationProperty(annotationIRI);
-        OWLAnnotation anno = df.getOWLAnnotation(prop, df.getOWLStringLiteral(entailmentRendering));
+        OWLAnnotation anno = df.getOWLAnnotation(prop, df.getOWLLiteral(entailmentRendering));
         man.applyChange(new AddOntologyAnnotation(ont, anno));
         man.saveOntology(ont, IRI.create(f));
     }
