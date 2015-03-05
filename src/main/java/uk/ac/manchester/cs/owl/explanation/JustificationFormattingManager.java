@@ -41,13 +41,13 @@ public class JustificationFormattingManager {
 
     static private JustificationFormattingManager manager;
 
-    private Map<Explanation, Map<OWLAxiom, Integer>> indentMap;
+    private Map<Explanation<?>, Map<OWLAxiom, Integer>> indentMap;
 
-    private Map<Explanation, List<OWLAxiom>> orderingMap;
+    private Map<Explanation<?>, List<OWLAxiom>> orderingMap;
 
     private JustificationFormattingManager() {
-        indentMap = new HashMap<Explanation, Map<OWLAxiom, Integer>>();
-        orderingMap = new HashMap<Explanation, List<OWLAxiom>>();
+        indentMap = new HashMap<>();
+        orderingMap = new HashMap<>();
     }
 
     public static synchronized JustificationFormattingManager getManager() {
@@ -57,7 +57,7 @@ public class JustificationFormattingManager {
         return manager;
     }
 
-    private void init(Explanation explanation) {
+    private void init(Explanation<?> explanation) {
         ExplanationOrdererImpl orderer = new ExplanationOrdererImpl(OWLManager.createOWLOntologyManager());
         ExplanationTree tree = orderer.getOrderedExplanation((OWLAxiom) explanation.getEntailment(), explanation.getAxioms());
         List<OWLAxiom> ordering = new ArrayList<OWLAxiom>();
@@ -78,13 +78,13 @@ public class JustificationFormattingManager {
         }
     }
 
-    private void initIfNecessary(Explanation explanation) {
+    private void initIfNecessary(Explanation<?> explanation) {
         if(!indentMap.containsKey(explanation)) {
             init(explanation);
         }
     }
 
-    public int getIndentation(Explanation explanation, OWLAxiom axiom) {
+    public int getIndentation(Explanation<?> explanation, OWLAxiom axiom) {
         if(!explanation.getAxioms().contains(axiom) && !explanation.getEntailment().equals(axiom)) {
             throw new IllegalArgumentException("The explanation does not contain the specified axiom: " + axiom + "  " + explanation);
         }
@@ -98,18 +98,18 @@ public class JustificationFormattingManager {
         }
     }
 
-    public void setIndentation(Explanation explanation, OWLAxiom axiom, int indentation) {
+    public void setIndentation(Explanation<?> explanation, OWLAxiom axiom, int indentation) {
         initIfNecessary(explanation);
         indentMap.get(explanation).put(axiom, indentation);
     }
 
-    public void increaseIndentation(Explanation explanation, OWLAxiom axiom) {
+    public void increaseIndentation(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         Integer indent = getIndentation(explanation, axiom);
         setIndentation(explanation, axiom, indent + 1);
     }
 
-    public void decreaseIndentation(Explanation explanation, OWLAxiom axiom) {
+    public void decreaseIndentation(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         Integer indent = getIndentation(explanation, axiom);
         indent = indent - 1;
@@ -119,7 +119,7 @@ public class JustificationFormattingManager {
         setIndentation(explanation, axiom, indent);
     }
 
-    public int moveAxiomUp(Explanation explanation, OWLAxiom axiom) {
+    public int moveAxiomUp(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         List<OWLAxiom> ordering = orderingMap.get(explanation);
         // Lowest index is 1 - the entailment is held in position 0
@@ -132,7 +132,7 @@ public class JustificationFormattingManager {
         return index;
     }
 
-    public int moveAxiomDown(Explanation explanation, OWLAxiom axiom) {
+    public int moveAxiomDown(Explanation<?> explanation, OWLAxiom axiom) {
         initIfNecessary(explanation);
         List<OWLAxiom> ordering = orderingMap.get(explanation);
         // Lowest index is 1 - the entailment is held in position 0
@@ -145,12 +145,12 @@ public class JustificationFormattingManager {
         return index;
     }
 
-    public List<OWLAxiom> getOrdering(Explanation explanation) {
+    public List<OWLAxiom> getOrdering(Explanation<?> explanation) {
         initIfNecessary(explanation);
         return Collections.unmodifiableList(orderingMap.get(explanation));
     }
 
-    public void clearFormatting(Explanation explanation) {
+    public void clearFormatting(Explanation<?> explanation) {
         indentMap.remove(explanation);
         orderingMap.remove(explanation);
     }
