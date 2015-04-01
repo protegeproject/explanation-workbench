@@ -1,14 +1,18 @@
 package uk.ac.manchester.cs.owl.explanation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
-import java.util.*;
-
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationOrdererImpl;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationTree;
-import uk.ac.manchester.cs.bhig.util.Tree;
+import uk.ac.manchester.cs.owl.explanation.ordering.Tree;
 /*
  * Copyright (C) 2008, University of Manchester
  *
