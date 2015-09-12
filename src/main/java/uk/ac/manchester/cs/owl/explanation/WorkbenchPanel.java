@@ -1,6 +1,10 @@
 package uk.ac.manchester.cs.owl.explanation;
 
+import javafx.application.Application;
 import org.protege.editor.core.Disposable;
+import org.protege.editor.core.ProtegeApplication;
+import org.protege.editor.core.ProtegeManager;
+import org.protege.editor.core.editorkit.EditorKitManager;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.OWLEditorKit;
@@ -73,7 +77,8 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     public WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment) {
         this.editorKit = ek;
-        JustificationManager justificationManager = JustificationManager.getExplanationManager(ek.getOWLModelManager());
+        JFrame workspaceFrame = ProtegeManager.getInstance().getFrame(ek.getWorkspace());
+        JustificationManager justificationManager = JustificationManager.getExplanationManager(workspaceFrame, ek.getOWLModelManager());
         this.workbenchManager = new WorkbenchManager(justificationManager, entailment);
         setLayout(new BorderLayout());
 

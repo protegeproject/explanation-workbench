@@ -2,6 +2,7 @@ package uk.ac.manchester.cs.owl.explanation;
 
 import org.protege.editor.core.editorkit.EditorKitManager;
 import org.protege.editor.core.ui.workspace.WorkspaceManager;
+import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owl.explanation.api.*;
 import org.semanticweb.owl.explanation.impl.blackbox.checker.InconsistentOntologyExplanationGeneratorFactory;
 import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGenerator;
@@ -78,13 +79,13 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
 
 //    private ExplanationProgressPanel panel = new ExplanationProgressPanel();
 
-    private JustificationManager(OWLModelManager modelManager) {
+    private JustificationManager(JFrame parentWindow, OWLModelManager modelManager) {
         this.modelManager = modelManager;
         rootDerivedGenerator = new CachingRootDerivedGenerator(modelManager);
         listeners = new ArrayList<ExplanationManagerListener>();
         explanationLimit = 2;
         findAllExplanations = true;
-        progressDialog = new JustificationGeneratorProgressDialog(new JFrame());
+        progressDialog = new JustificationGeneratorProgressDialog(parentWindow);
         executorService = Executors.newSingleThreadExecutor();
         ontologyChangeListener = new OWLOntologyChangeListener() {
             public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
@@ -272,10 +273,10 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         }
     }
 
-    public static synchronized JustificationManager getExplanationManager(OWLModelManager modelManager) {
+    public static synchronized JustificationManager getExplanationManager(JFrame parentWindow, OWLModelManager modelManager) {
         JustificationManager m = modelManager.get(KEY);
         if (m == null) {
-            m = new JustificationManager(modelManager);
+            m = new JustificationManager(parentWindow, modelManager);
             modelManager.put(KEY, m);
         }
         return m;
