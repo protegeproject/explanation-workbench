@@ -3,7 +3,10 @@ package uk.ac.manchester.cs.owl.explanation;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.inference.ProtegeOWLReasonerInfo;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.reasoner.*;
+import org.semanticweb.owlapi.reasoner.IllegalConfigurationException;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 /*
  * Copyright (C) 2010, University of Manchester
  *

@@ -2,8 +2,6 @@ package uk.ac.manchester.cs.owl.explanation;
 
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import uk.ac.manchester.cs.owl.explanation.JustificationManager;
-import uk.ac.manchester.cs.owl.explanation.JustificationType;
 
 import java.util.Set;
 

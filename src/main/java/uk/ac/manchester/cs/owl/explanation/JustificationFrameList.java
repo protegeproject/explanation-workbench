@@ -9,7 +9,6 @@ import org.protege.editor.owl.ui.framelist.OWLFrameList;
 import org.protege.editor.owl.ui.framelist.OWLFrameListPopupMenuAction;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import uk.ac.manchester.cs.owl.explanation.AxiomSelectionModel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,7 +18,8 @@ import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.text.AttributedString;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**

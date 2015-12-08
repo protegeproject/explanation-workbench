@@ -1,14 +1,11 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import uk.ac.manchester.cs.owl.explanation.*;
+import org.protege.editor.core.Disposable;
+import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owl.explanation.api.Explanation;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-
-import org.protege.editor.owl.OWLEditorKit;
-import org.protege.editor.core.Disposable;
-import org.semanticweb.owl.explanation.api.Explanation;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 /*

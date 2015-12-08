@@ -3,13 +3,11 @@ package uk.ac.manchester.cs.owl.explanation;
 import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import uk.ac.manchester.cs.owl.explanation.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge

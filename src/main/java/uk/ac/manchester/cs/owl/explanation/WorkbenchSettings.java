@@ -1,7 +1,5 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import uk.ac.manchester.cs.owl.explanation.JustificationType;
-
 /**
  * Author: Matthew Horridge
  * Stanford University

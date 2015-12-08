@@ -1,27 +1,27 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import org.protege.editor.core.editorkit.EditorKitManager;
-import org.protege.editor.core.ui.workspace.WorkspaceManager;
-import org.protege.editor.owl.model.OWLWorkspace;
+import org.protege.editor.core.Disposable;
+import org.protege.editor.core.log.LogBanner;
+import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owl.explanation.api.*;
 import org.semanticweb.owl.explanation.impl.blackbox.checker.InconsistentOntologyExplanationGeneratorFactory;
-import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGenerator;
 import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGeneratorFactory;
 import org.semanticweb.owlapi.model.*;
-import org.protege.editor.core.Disposable;
-import org.protege.editor.core.ProtegeApplication;
-import org.protege.editor.owl.model.OWLModelManager;
-
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.*;
-import java.awt.*;
-
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import uk.ac.manchester.cs.owl.explanation.ExplanationProgressPanel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static uk.ac.manchester.cs.owl.explanation.ExplanationLogging.MARKER;
 /*
  * Copyright (C) 2008, University of Manchester
  *
@@ -58,6 +58,8 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     private final OWLOntologyChangeListener ontologyChangeListener;
 
     public static final String KEY = "uk.ac.manchester.cs.owl.explanation";
+
+    private static final Logger logger = LoggerFactory.getLogger(JustificationManager.class);
 
     private OWLModelManager modelManager;
 
@@ -168,27 +170,34 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
 
 
     private Set<Explanation<OWLAxiom>> computeJustifications(OWLAxiom entailment, JustificationType justificationType) throws ExplanationException {
-        Set<OWLAxiom> axioms = new HashSet<OWLAxiom>();
+        logger.info(LogBanner.start("Computing Justifications"));
+        logger.info(MARKER, "Computing justifications for {}", entailment);
+        Set<OWLAxiom> axioms = new HashSet<>();
         for (OWLOntology ont : modelManager.getActiveOntologies()) {
             axioms.addAll(ont.getAxioms());
         }
-
-        ExplanationGeneratorCallable callable = new ExplanationGeneratorCallable(axioms, entailment, justificationType);
+        ExplanationGeneratorCallable callable = new ExplanationGeneratorCallable(
+                axioms,
+                entailment,
+                getCurrentExplanationGeneratorFactory(justificationType),
+                findAllExplanations,
+                progressDialog);
         try {
             executorService.submit(callable);
         }
         catch (ExplanationGeneratorInterruptedException e) {
-            System.err.println("Explanation generator terminated early by user");
+            logger.info(MARKER, "Justification computation terminated early by user");
         }
         progressDialog.reset();
         progressDialog.setVisible(true);
 
-        HashSet<Explanation<OWLAxiom>> explanations = new HashSet<Explanation<OWLAxiom>>(callable.found);
+        HashSet<Explanation<OWLAxiom>> explanations = new HashSet<>(callable.found);
+        logger.info(MARKER, "A total of {} explanations have been computed", explanations.size());
         fireExplanationsComputed(entailment);
+        logger.info(LogBanner.end());
         return explanations;
-
-
     }
+
 
     private ExplanationGeneratorFactory<OWLAxiom> getCurrentExplanationGeneratorFactory(JustificationType type) {
         OWLReasoner reasoner = modelManager.getOWLReasonerManager().getCurrentReasoner();
@@ -283,22 +292,28 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     }
 
 
-    private class ExplanationGeneratorCallable implements Callable<Set<Explanation<OWLAxiom>>>, ExplanationProgressMonitor<OWLAxiom> {
+    private static class ExplanationGeneratorCallable implements Callable<Set<Explanation<OWLAxiom>>>, ExplanationProgressMonitor<OWLAxiom> {
 
-        private Set<OWLAxiom> axioms;
+        private final Set<OWLAxiom> axioms;
 
-        private OWLAxiom axiom;
+        private final OWLAxiom axiom;
 
         private int limit = Integer.MAX_VALUE;
 
-        private Set<Explanation<OWLAxiom>> found = new HashSet<Explanation<OWLAxiom>>();
+        private final Set<Explanation<OWLAxiom>> found = new HashSet<>();
 
-        private JustificationType justificationType;
+        private final JustificationGeneratorProgressDialog progressDialog;
 
-        private ExplanationGeneratorCallable(Set<OWLAxiom> axioms, OWLAxiom axiom, JustificationType justificationType) {
+        private final boolean findAllExplanations;
+
+        private final ExplanationGeneratorFactory<OWLAxiom> factory;
+
+        private ExplanationGeneratorCallable(Set<OWLAxiom> axioms, OWLAxiom axiom, ExplanationGeneratorFactory<OWLAxiom> factory, boolean findAllExplanations, JustificationGeneratorProgressDialog progressDialog) {
             this.axioms = axioms;
             this.axiom = axiom;
-            this.justificationType = justificationType;
+            this.progressDialog = progressDialog;
+            this.findAllExplanations = findAllExplanations;
+            this.factory = factory;
         }
 
         /**
@@ -308,7 +323,6 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
          */
         public Set<Explanation<OWLAxiom>> call() throws Exception {
             found.clear();
-            ExplanationGeneratorFactory<OWLAxiom> factory = getCurrentExplanationGeneratorFactory(justificationType);
             ExplanationGenerator<OWLAxiom> delegate = factory.createExplanationGenerator(axioms, this);
             progressDialog.reset();
             try {
@@ -321,6 +335,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
             }
             finally {
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         progressDialog.setVisible(false);
                     }
@@ -333,6 +348,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         public void foundExplanation(ExplanationGenerator<OWLAxiom> explanationGenerator, Explanation<OWLAxiom> explanation, Set<Explanation<OWLAxiom>> explanations) {
             progressDialog.getProgressMonitor().foundExplanation(explanationGenerator, explanation, explanations);
             found.add(explanation);
+            logger.info(MARKER, "Explanation {} found", found.size(), explanation.getEntailment());
         }
 
         public boolean isCancelled() {

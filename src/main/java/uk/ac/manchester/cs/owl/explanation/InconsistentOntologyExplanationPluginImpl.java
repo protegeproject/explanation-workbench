@@ -1,21 +1,11 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import org.protege.editor.core.ui.util.JOptionPaneEx;
-import org.protege.editor.core.ui.util.UIUtil;
 import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.OWLModelManager;
-import org.protege.editor.owl.ui.explanation.io.InconsistentOntologyPlugin;
 import org.protege.editor.owl.ui.explanation.io.InconsistentOntologyPluginInstance;
-import org.protege.editor.owl.ui.frame.cls.OWLSubClassAxiomFrameSection;
-import org.semanticweb.owl.explanation.api.ConsoleExplanationProgressMonitor;
-import org.semanticweb.owl.explanation.api.ExplanationGenerator;
-import org.semanticweb.owl.explanation.impl.blackbox.checker.InconsistentOntologyExplanationGeneratorFactory;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import uk.ac.manchester.cs.owl.explanation.WorkbenchPanel;
 
 import javax.swing.*;
 import java.awt.event.ComponentAdapter;

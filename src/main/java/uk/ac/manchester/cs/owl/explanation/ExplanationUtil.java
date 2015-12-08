@@ -1,15 +1,14 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.core.ui.util.UIUtil;
+import org.protege.editor.owl.OWLEditorKit;
 import org.semanticweb.owl.explanation.api.Explanation;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.CollectionFactory;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 
 import javax.swing.*;
 import java.io.File;
-import java.net.URI;
 /*
  * Copyright (C) 2008, University of Manchester
  *

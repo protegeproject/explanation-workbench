@@ -1,24 +1,24 @@
 package uk.ac.manchester.cs.owl.explanation;
 
+import org.protege.editor.core.Disposable;
+import org.protege.editor.owl.model.OWLModelManager;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
+import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owl.explanation.api.ExplanationException;
 import org.semanticweb.owl.explanation.api.RootDerivedReasoner;
 import org.semanticweb.owl.explanation.impl.rootderived.StructuralRootDerivedReasoner;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.protege.editor.owl.model.OWLModelManager;
-import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
-import org.protege.editor.owl.model.event.EventType;
-import org.protege.editor.core.Disposable;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLException;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 /*
  * Copyright (C) 2008, University of Manchester
  *

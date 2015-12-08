@@ -4,14 +4,10 @@ import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owl.explanation.api.ExplanationGenerator;
 import org.semanticweb.owl.explanation.api.ExplanationProgressMonitor;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLException;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
-import java.util.concurrent.Executors;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge

@@ -9,7 +9,6 @@ import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiomShortCut;
 
 import java.util.Arrays;
 import java.util.Collections;

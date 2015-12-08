@@ -2,7 +2,6 @@ package uk.ac.manchester.cs.owl.explanation;
 
 import org.protege.editor.owl.ui.explanation.ExplanationResult;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**

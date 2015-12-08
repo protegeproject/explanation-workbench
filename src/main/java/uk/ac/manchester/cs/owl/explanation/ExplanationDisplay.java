@@ -1,10 +1,8 @@
 package uk.ac.manchester.cs.owl.explanation;
 
+import org.protege.editor.core.Disposable;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.protege.editor.core.Disposable;
-
-import java.util.Set;
 /*
  * Copyright (C) 2008, University of Manchester
  *

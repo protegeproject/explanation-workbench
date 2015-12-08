@@ -1,7 +1,5 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import uk.ac.manchester.cs.owl.explanation.AxiomSelectionModel;
-import uk.ac.manchester.cs.owl.explanation.AxiomSelectionListener;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
 import java.util.*;

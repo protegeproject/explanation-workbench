@@ -1,6 +1,5 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import org.semanticweb.owlapi.model.OWLAxiom;
 /*
  * Copyright (C) 2008, University of Manchester
  *

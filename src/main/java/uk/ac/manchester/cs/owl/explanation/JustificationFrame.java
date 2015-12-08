@@ -4,7 +4,6 @@ import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.ui.frame.AbstractOWLFrame;
 import org.semanticweb.owl.explanation.api.Explanation;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 /**
  * Author: Matthew Horridge

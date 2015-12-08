@@ -1,15 +1,14 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import org.semanticweb.owl.explanation.api.ExplanationProgressMonitor;
-import org.semanticweb.owl.explanation.api.ExplanationGenerator;
 import org.semanticweb.owl.explanation.api.Explanation;
+import org.semanticweb.owl.explanation.api.ExplanationGenerator;
+import org.semanticweb.owl.explanation.api.ExplanationProgressMonitor;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.protege.editor.owl.model.OWLWorkspace;
 
 import javax.swing.*;
-import java.util.Set;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Set;
 /*
  * Copyright (C) 2009, University of Manchester
  *

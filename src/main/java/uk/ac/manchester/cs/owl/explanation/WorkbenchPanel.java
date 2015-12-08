@@ -1,30 +1,25 @@
 package uk.ac.manchester.cs.owl.explanation;
 
-import javafx.application.Application;
 import org.protege.editor.core.Disposable;
-import org.protege.editor.core.ProtegeApplication;
 import org.protege.editor.core.ProtegeManager;
-import org.protege.editor.core.editorkit.EditorKitManager;
+import org.protege.editor.owl.OWLEditorKit;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.protege.editor.owl.OWLEditorKit;
+import org.semanticweb.owl.explanation.api.Explanation;
+import org.semanticweb.owl.explanation.api.ExplanationException;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owl.explanation.api.Explanation;
-import org.semanticweb.owl.explanation.api.ExplanationException;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.util.*;
-import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import org.semanticweb.owlapi.model.OWLClassExpression;
+import java.util.*;
+import java.util.List;
 /*
  * Copyright (C) 2008, University of Manchester
  *
@@ -68,12 +63,9 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     private AxiomSelectionModelImpl selectionModel;
 
-
     private WorkbenchManager workbenchManager;
 
-
-//    private JCheckBox showAllExplanationsCheckBox = new JCheckBox();
-
+    private static final Logger logger = LoggerFactory.getLogger(WorkbenchPanel.class);
 
     public WorkbenchPanel(OWLEditorKit ek, OWLAxiom entailment) {
         this.editorKit = ek;
@@ -84,7 +76,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
         selectionModel = new AxiomSelectionModelImpl();
 
-        panels = new ArrayList<ExplanationDisplay>();
+        panels = new ArrayList<>();
 
         editorKit.getModelManager().addListener(this);
         explanationDisplayHolder = new Box(BoxLayout.Y_AXIS);
@@ -180,23 +172,16 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
         headerPanel.add(computeMaxExplanationsRadioButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 
-        final Timer spinnerUpdateTimer = new Timer(800, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                workbenchSettings.setLimit((Integer) maxExplanationsSelector.getValue());
-                refill();
-            }
+        final Timer spinnerUpdateTimer = new Timer(800, e -> {
+            workbenchSettings.setLimit((Integer) maxExplanationsSelector.getValue());
+            refill();
         });
 
         spinnerUpdateTimer.setRepeats(false);
 
         headerPanel.add(maxExplanationsSelector, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHEAST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
         maxExplanationsSelector.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
-        maxExplanationsSelector.addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent e) {
-                spinnerUpdateTimer.restart();
-            }
-        });
+        maxExplanationsSelector.addChangeListener(e -> spinnerUpdateTimer.restart());
 
         return headerPanel;
     }
@@ -211,7 +196,6 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     public void explanationLimitChanged(JustificationManager explanationManager) {
         maxExplanationsSelector.setEnabled(!workbenchManager.getWorkbenchSettings().isFindAllExplanations());
-//        showAllExplanationsCheckBox.setSelected(expMan.isFindAllExplanations());
         selectionChanged();
     }
 
@@ -256,14 +240,6 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
         }
     }
 
-
-    public void removeSelectedAxioms() {
-//        RepairPanel.showDialog(editorKit.getWorkspace(), editorKit);
-//        repMan.applyPlan();
-//        editorKit.getModelManager().getOWLReasonerManager().classifyAsynchronously(Collections.emptySet());
-        repaint();
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -278,7 +254,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
 
     protected ExplanationDisplay createExplanationDisplay(Explanation<OWLAxiom> explanation, int num, int total, int limit) {
-        return new JustificationFrameExplanationDisplay(editorKit, this, workbenchManager, explanation);//new ExplanationTable(editorKit, selectionModel, explanation);
+        return new JustificationFrameExplanationDisplay(editorKit, this, workbenchManager, explanation);
     }
 
 
@@ -290,14 +266,11 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
             explanationDisplayHolder.removeAll();
             explanationDisplayHolder.validate();
 
-            Set<Explanation> allExplanations = new HashSet<Explanation>();
             OWLAxiom entailment = workbenchManager.getEntailment();
             WorkbenchSettings settings = workbenchManager.getWorkbenchSettings();
 
-
             Set<Explanation<OWLAxiom>> justifications = workbenchManager.getJustifications(entailment);
             List<Explanation<OWLAxiom>> exps = getOrderedExplanations(justifications);
-            allExplanations.addAll(exps);
             int count = 1;
             for (Explanation<OWLAxiom> exp : exps) {
                 final ExplanationDisplay explanationDisplayPanel = createExplanationDisplay(exp, count, exps.size(), settings.getLimit());
@@ -315,18 +288,12 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
             scrollPane.validate();
         }
         catch (ExplanationException e) {
-            e.printStackTrace();
+            logger.error("An error occurred whilst computing explanations: {}", e.getMessage(), e);
         }
     }
 
-//    protected double getComplexity(Explanation<OWLAxiom> explanation) {
-//        ProtegeOWLReasonerFactoryWrapper rf = new ProtegeOWLReasonerFactoryWrapper(editorKit);
-//        ComplexityCalculator calculator = new DefaultComplexityCalculator(rf);
-//        return calculator.computeComplexity(explanation.getEntailment(), explanation.getAxioms());
-//    }
-
     protected List<Explanation<OWLAxiom>> getOrderedExplanations(Set<Explanation<OWLAxiom>> explanations) {
-        List<Explanation<OWLAxiom>> orderedExplanations = new ArrayList<Explanation<OWLAxiom>>();
+        List<Explanation<OWLAxiom>> orderedExplanations = new ArrayList<>();
         orderedExplanations.addAll(explanations);
         Collections.sort(orderedExplanations, new Comparator<Explanation<OWLAxiom>>() {
             public int compare(Explanation<OWLAxiom> o1, Explanation<OWLAxiom> o2) {
@@ -341,28 +308,12 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
                 return o1.getSize() - o2.getSize();
             }
         });
-//        Collections.sort(orderedExplanations, new Comparator<Explanation<OWLAxiom>>() {
-//            public int compare(Explanation<OWLAxiom> o1, Explanation<OWLAxiom> o2) {
-//
-//                double cpx1 = getComplexity(o1);
-//                double cpx2 = getComplexity(o2);
-//                if(cpx1 < cpx2) {
-//                    return -1;
-//                }
-//                else if(cpx1 > cpx2) {
-//                    return 1;
-//                }
-//                else {
-//                    return 0;
-//                }
-//            }
-//        });
         return orderedExplanations;
     }
 
 
     private Set<AxiomType<?>> getAxiomTypes(Explanation<OWLAxiom> explanation) {
-        Set<AxiomType<?>> result = new HashSet<AxiomType<?>>();
+        Set<AxiomType<?>> result = new HashSet<>();
         for (OWLAxiom ax : explanation.getAxioms()) {
             result.add(ax.getAxiomType());
         }
@@ -371,7 +322,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
 
     private Set<ClassExpressionType> getClassExpressionTypes(Explanation<OWLAxiom> explanation) {
-        Set<ClassExpressionType> result = new HashSet<ClassExpressionType>();
+        Set<ClassExpressionType> result = new HashSet<>();
         for (OWLAxiom ax : explanation.getAxioms()) {
             for (OWLClassExpression ce : ax.getNestedClassExpressions()) {
                 result.add(ce.getClassExpressionType());
@@ -390,10 +341,6 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     public void handleChange(OWLModelManagerChangeEvent event) {
 
-    }
-
-
-    public void axiomSelectionChanged(ExplanationDisplay source) {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
