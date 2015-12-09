@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AxiomType;
@@ -75,6 +76,8 @@ import uk.ac.manchester.cs.owl.explanation.ordering.EntailedAxiomTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationOrderer;
 import uk.ac.manchester.cs.owl.explanation.ordering.ExplanationTree;
 import uk.ac.manchester.cs.owl.explanation.ordering.Tree;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -150,12 +153,9 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
                         .asOWLNamedIndividual()));
             }
         }
-        List<OWLAxiom> rootAxioms = new ArrayList<>();
-        for (OWLAxiom ax : axioms) {
-            if (!axs.contains(ax)) {
-                rootAxioms.add(ax);
-            }
-        }
+        List<OWLAxiom> rootAxioms = axioms.stream()
+                .filter(ax -> !axs.contains(ax))
+                .collect(toList());
         Collections.sort(rootAxioms, new Comparator<OWLAxiom>() {
 
             @Override

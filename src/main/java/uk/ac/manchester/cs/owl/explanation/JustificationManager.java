@@ -89,11 +89,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         findAllExplanations = true;
         progressDialog = new JustificationGeneratorProgressDialog(parentWindow);
         executorService = Executors.newSingleThreadExecutor();
-        ontologyChangeListener = new OWLOntologyChangeListener() {
-            public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
-                justificationCacheManager.clear();
-            }
-        };
+        ontologyChangeListener = changes -> justificationCacheManager.clear();
         modelManager.addOntologyChangeListener(ontologyChangeListener);
     }
 
@@ -334,12 +330,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
                 }
             }
             finally {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.setVisible(false);
-                    }
-                });
+                SwingUtilities.invokeLater(() -> progressDialog.setVisible(false));
             }
 
             return found;
