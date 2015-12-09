@@ -20,16 +20,4 @@
         <name value="Inconsistent Ontology Explanation"/>
     </extension>
 
-    <!--<extension id="computeNonTrivialEntailments"-->
-               <!--point="org.protege.editor.core.application.EditorKitMenuAction">-->
-        <!--<name value="Compute non-trivial entailments..."/>-->
-        <!--<class value="uk.ac.manchester.cs.owl.explanation.ui.ComputeNonTrivialEntailmentsAction"/>-->
-        <!--<toolTip value="Computes non-trivial direct class subsumptions"/>-->
-        <!--<path value="org.protege.editor.core.application.menu.Tools/SlotAA-G"/>-->
-        <!--<editorKitId value="OWLEditorKit"/>-->
-    <!--</extension>-->
-
-
-
-
 </plugin>
