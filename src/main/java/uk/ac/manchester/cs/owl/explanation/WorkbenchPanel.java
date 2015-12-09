@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 /*
  * Copyright (C) 2008, University of Manchester
  *
@@ -260,9 +261,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     private void refill() {
         try {
-            for (ExplanationDisplay panel : panels) {
-                panel.dispose();
-            }
+            panels.forEach(ExplanationDisplay::dispose);
             explanationDisplayHolder.removeAll();
             explanationDisplayHolder.validate();
 
@@ -324,9 +323,9 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
     private Set<ClassExpressionType> getClassExpressionTypes(Explanation<OWLAxiom> explanation) {
         Set<ClassExpressionType> result = new HashSet<>();
         for (OWLAxiom ax : explanation.getAxioms()) {
-            for (OWLClassExpression ce : ax.getNestedClassExpressions()) {
-                result.add(ce.getClassExpressionType());
-            }
+            result.addAll(ax.getNestedClassExpressions().stream()
+                    .map(OWLClassExpression::getClassExpressionType)
+                    .collect(Collectors.toList()));
         }
         return result;
     }

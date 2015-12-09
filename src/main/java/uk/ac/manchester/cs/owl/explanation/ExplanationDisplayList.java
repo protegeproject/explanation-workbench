@@ -88,9 +88,7 @@ public class ExplanationDisplayList extends JPanel implements Disposable {
     }
 
     private void displayLaconicExplanation(boolean b) {
-        Explanation old = display.getExplanation();
         display.setDisplayLaconicExplanation(b);
-        Explanation newExp = display.getExplanation();
     }
 
 

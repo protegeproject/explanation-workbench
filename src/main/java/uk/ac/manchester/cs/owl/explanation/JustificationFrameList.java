@@ -259,7 +259,7 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
 
         StringBuilder sb = new StringBuilder("In ");
         int start = sb.length();
-        Color highlightColor = sel ? getSelectionForeground() : Color.DARK_GRAY;
+        final Color highlightColor;
             if(popularity <= 1) {
                 sb.append("NO");
                 highlightColor = SINGLE_POPULARITY_COLOR;
