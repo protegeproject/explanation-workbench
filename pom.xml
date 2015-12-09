@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+	<properties>
+		<protege.version>5.0.0-beta-19</protege.version>
+	</properties>
+
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
@@ -66,19 +69,19 @@
         <dependency>
 			<groupId>edu.stanford.protege</groupId>
 			<artifactId>protege-common</artifactId>
-			<version>5.0.0-beta-18</version>
+			<version>${protege.version}</version>
         </dependency>
 
 		<dependency>
 			<groupId>edu.stanford.protege</groupId>
 			<artifactId>protege-editor-core</artifactId>
-			<version>5.0.0-beta-18</version>
+			<version>${protege.version}</version>
 		</dependency>
 
         <dependency>
 			<groupId>edu.stanford.protege</groupId>
 			<artifactId>protege-editor-owl</artifactId>
-			<version>5.0.0-beta-18</version>
+			<version>${protege.version}</version>
         </dependency>
         
 		<dependency>
