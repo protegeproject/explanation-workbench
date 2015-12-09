@@ -71,15 +71,9 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
 
     private boolean findAllExplanations;
 
-//    private Map<OWLAxiom, Set<Explanation<OWLAxiom>>> regularExplanationCache = new HashMap<OWLAxiom, Set<Explanation<OWLAxiom>>>();
-//
-//    private Map<OWLAxiom, Set<Explanation<OWLAxiom>>> laconicExplanationCache = new HashMap<OWLAxiom, Set<Explanation<OWLAxiom>>>();
-
     private JustificationCacheManager justificationCacheManager = new JustificationCacheManager();
     
     private JustificationGeneratorProgressDialog progressDialog;
-
-//    private ExplanationProgressPanel panel = new ExplanationProgressPanel();
 
     private JustificationManager(JFrame parentWindow, OWLModelManager modelManager) {
         this.modelManager = modelManager;

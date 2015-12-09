@@ -31,10 +31,6 @@ import org.semanticweb.owlapi.model.OWLAxiom;
  */
 public interface ExplanationManagerListener {
 
-//    void entailmentAdded(ProtegeExplanationManager listener, OWLAxiom entailment);
-//
-//    void entailmentRemoved(ProtegeExplanationManager listener, OWLAxiom entailment);
-
     void explanationLimitChanged(JustificationManager explanationManager);
 
     void explanationsComputed(OWLAxiom entailment);

@@ -41,22 +41,7 @@ public interface ExplanationDisplay extends Disposable {
      */
     Explanation<OWLAxiom> getExplanation();
 
-//    void setSelectedAxioms(Set<OWLAxiom> axioms);
-
-//    Set<OWLAxiom> getSelectedAxioms();
-
-//    void addAxiomSelectionListener(ExplanationDisplayListener listener);
-
-//    void removeAxiomSelectionListener(ExplanationDisplayListener listener);
-
     void dispose();
-
-
-//    public interface ExplanationDisplayListener {
-//
-//        void axiomSelectionChanged(ExplanationDisplay source);
-//    }
-
 
     /**
      * Asks the display to show a laconic version of an explanation

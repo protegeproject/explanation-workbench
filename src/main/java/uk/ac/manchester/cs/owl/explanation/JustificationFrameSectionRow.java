@@ -35,11 +35,6 @@ public class JustificationFrameSectionRow extends AbstractOWLFrameSectionRow<Exp
     }
 
     private static OWLOntology getOntologyForAxiom(OWLEditorKit editorKit, OWLAxiom axiom) {
-//        for(OWLOntology ont : editorKit.getOWLModelManager().getActiveOntologies()) {
-//            if(ont.containsAxiom(axiom)) {
-//                return ont;
-//            }
-//        }
         return null;
     }
 
