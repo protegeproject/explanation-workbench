@@ -57,7 +57,7 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
 
     public CachingRootDerivedGenerator(OWLModelManager modelManager) {
         this.modelManager = modelManager;
-        rootUnsatClses = new HashSet<OWLClass>();
+        rootUnsatClses = new HashSet<>();
         modelManager.addListener(this);
         modelManager.addOntologyChangeListener(this);
         dirty = true;

@@ -39,8 +39,8 @@ public class AxiomSelectionModelImpl implements AxiomSelectionModel {
 
 
     public AxiomSelectionModelImpl() {
-        selectedAxioms = new HashSet<OWLAxiom>();
-        listeners = new ArrayList<AxiomSelectionListener>();
+        selectedAxioms = new HashSet<>();
+        listeners = new ArrayList<>();
     }
 
 
@@ -60,7 +60,7 @@ public class AxiomSelectionModelImpl implements AxiomSelectionModel {
     }
 
     protected void fireEvent(OWLAxiom axiom, boolean added) {
-        for(AxiomSelectionListener lsnr : new ArrayList<AxiomSelectionListener>(listeners)) {
+        for(AxiomSelectionListener lsnr : new ArrayList<>(listeners)) {
             if(added) {
                 lsnr.axiomAdded(this, axiom);
             }

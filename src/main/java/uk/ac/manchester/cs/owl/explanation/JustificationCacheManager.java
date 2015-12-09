@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class JustificationCacheManager {
 
-    private Map<JustificationType, JustificationCache> caches = new HashMap<JustificationType, JustificationCache>();
+    private Map<JustificationType, JustificationCache> caches = new HashMap<>();
 
     public JustificationCacheManager() {
         for(JustificationType type : JustificationType.values()) {

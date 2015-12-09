@@ -104,16 +104,16 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
      */
     public ProtegeExplanationOrderer(OWLOntologyManager m) {
         currentExplanation = Collections.emptySet();
-        lhs2AxiomMap = new HashMap<OWLEntity, Set<OWLAxiom>>();
-        entitiesByAxiomRHS = new HashMap<OWLAxiom, Set<OWLEntity>>();
+        lhs2AxiomMap = new HashMap<>();
+        entitiesByAxiomRHS = new HashMap<>();
         seedExtractor = new SeedExtractor();
         man = m;
-        mappedAxioms = new HashMap<OWLObject, Set<OWLAxiom>>();
-        passTypes = new HashSet<AxiomType<?>>();
+        mappedAxioms = new HashMap<>();
+        passTypes = new HashSet<>();
         // I'm not sure what to do with disjoint classes yet. At the
         // moment, we just shove them at the end at the top level.
         passTypes.add(AxiomType.DISJOINT_CLASSES);
-        consumedAxioms = new HashSet<OWLAxiom>();
+        consumedAxioms = new HashSet<>();
     }
 
     private void reset() {
@@ -125,14 +125,14 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
     @Override
     public ExplanationTree getOrderedExplanation(OWLAxiom entailment,
                                                  Set<OWLAxiom> axioms) {
-        currentExplanation = new HashSet<OWLAxiom>(axioms);
+        currentExplanation = new HashSet<>(axioms);
         buildIndices();
         ExplanationTree root = new EntailedAxiomTree(entailment);
         currentSource = seedExtractor.getSource(entailment);
         insertChildren(currentSource, root);
         currentTarget = seedExtractor.getTarget(entailment);
         Set<OWLAxiom> axs = root.getUserObjectClosure();
-        final Set<OWLAxiom> targetAxioms = new HashSet<OWLAxiom>();
+        final Set<OWLAxiom> targetAxioms = new HashSet<>();
         if (currentTarget != null) {
             if (currentTarget.isOWLClass()) {
                 targetAxioms.addAll(ont.getAxioms(currentTarget.asOWLClass()));
@@ -150,7 +150,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
                         .asOWLNamedIndividual()));
             }
         }
-        List<OWLAxiom> rootAxioms = new ArrayList<OWLAxiom>();
+        List<OWLAxiom> rootAxioms = new ArrayList<>();
         for (OWLAxiom ax : axioms) {
             if (!axs.contains(ax)) {
                 rootAxioms.add(ax);
@@ -177,13 +177,13 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
 
     private List<OWLEntity> getRHSEntitiesSorted(OWLAxiom ax) {
         Collection<OWLEntity> entities = getRHSEntities(ax);
-        List<OWLEntity> sortedEntities = new ArrayList<OWLEntity>(entities);
+        List<OWLEntity> sortedEntities = new ArrayList<>(entities);
         Collections.sort(sortedEntities, propertiesFirstComparator);
         return sortedEntities;
     }
 
     private void insertChildren(OWLEntity entity, ExplanationTree tree) {
-        Set<OWLAxiom> currentPath = new HashSet<OWLAxiom>(
+        Set<OWLAxiom> currentPath = new HashSet<>(
                 tree.getUserObjectPathToRoot());
         Set<? extends OWLAxiom> axioms = Collections.emptySet();
         if (entity != null) {
@@ -238,7 +238,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
             }
             ont = man.createOntology(IRI.create("http://www.semanticweb.org/",
                     "ontology" + randomstart.incrementAndGet()));
-            List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+            List<OWLOntologyChange> changes = new ArrayList<>();
             for (OWLAxiom ax : currentExplanation) {
                 changes.add(new AddAxiom(ont, ax));
                 ax.accept(builder);
@@ -267,7 +267,7 @@ public class ProtegeExplanationOrderer implements ExplanationOrderer {
                                                boolean addIfEmpty) {
         Set<E> values = map.get(obj);
         if (values == null) {
-            values = new HashSet<E>();
+            values = new HashSet<>();
             if (addIfEmpty) {
                 map.put(obj, values);
             }

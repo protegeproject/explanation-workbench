@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class JustificationCache {
     
-    private Map<OWLAxiom, Set<Explanation<OWLAxiom>>> cache = new HashMap<OWLAxiom, Set<Explanation<OWLAxiom>>>();
+    private Map<OWLAxiom, Set<Explanation<OWLAxiom>>> cache = new HashMap<>();
 
     public boolean contains(OWLAxiom entailment) {
         return cache.containsKey(entailment);
@@ -24,13 +24,13 @@ public class JustificationCache {
         if(explanations == null) {
             return Collections.emptySet();
         }
-        return new HashSet<Explanation<OWLAxiom>>(explanations);
+        return new HashSet<>(explanations);
     }
 
     public void put(Explanation<OWLAxiom> explanation) {
         Set<Explanation<OWLAxiom>> expls = cache.get(explanation.getEntailment());
         if(expls == null) {
-            expls = new HashSet<Explanation<OWLAxiom>>();
+            expls = new HashSet<>();
             cache.put(explanation.getEntailment(), expls);
         }
         expls.add(explanation);

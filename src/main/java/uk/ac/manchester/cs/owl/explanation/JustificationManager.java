@@ -84,7 +84,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     private JustificationManager(JFrame parentWindow, OWLModelManager modelManager) {
         this.modelManager = modelManager;
         rootDerivedGenerator = new CachingRootDerivedGenerator(modelManager);
-        listeners = new ArrayList<ExplanationManagerListener>();
+        listeners = new ArrayList<>();
         explanationLimit = 2;
         findAllExplanations = true;
         progressDialog = new JustificationGeneratorProgressDialog(parentWindow);
@@ -215,7 +215,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
             if (type.equals(JustificationType.LACONIC)) {
                 OWLReasonerFactory rf = getReasonerFactory();
                 InconsistentOntologyExplanationGeneratorFactory fac = new InconsistentOntologyExplanationGeneratorFactory(rf, Long.MAX_VALUE);
-                return new LaconicExplanationGeneratorFactory<OWLAxiom>(fac);
+                return new LaconicExplanationGeneratorFactory<>(fac);
             }
             else {
                 OWLReasonerFactory rf = getReasonerFactory();
@@ -245,7 +245,7 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
             else {
                 OWLReasonerFactory rf = getReasonerFactory();
                 InconsistentOntologyExplanationGeneratorFactory fac = new InconsistentOntologyExplanationGeneratorFactory(rf, Long.MAX_VALUE);
-                LaconicExplanationGeneratorFactory<OWLAxiom> lacFac = new LaconicExplanationGeneratorFactory<OWLAxiom>(fac);
+                LaconicExplanationGeneratorFactory<OWLAxiom> lacFac = new LaconicExplanationGeneratorFactory<>(fac);
                 ExplanationGenerator<OWLAxiom> g = lacFac.createExplanationGenerator(explanation.getAxioms());
                 return g.getExplanations(explanation.getEntailment(), limit);
             }
@@ -271,13 +271,13 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
     }
 
     protected void fireExplanationLimitChanged() {
-        for (ExplanationManagerListener lsnr : new ArrayList<ExplanationManagerListener>(listeners)) {
+        for (ExplanationManagerListener lsnr : new ArrayList<>(listeners)) {
             lsnr.explanationLimitChanged(this);
         }
     }
 
     protected void fireExplanationsComputed(OWLAxiom entailment) {
-        for (ExplanationManagerListener lsnr : new ArrayList<ExplanationManagerListener>(listeners)) {
+        for (ExplanationManagerListener lsnr : new ArrayList<>(listeners)) {
             lsnr.explanationsComputed(entailment);
         }
     }
