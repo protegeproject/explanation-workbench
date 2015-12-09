@@ -82,11 +82,7 @@ public class ExplanationProgressPanel extends JPanel implements ExplanationProgr
     }
 
     private void updateMessage() {
-        Runnable runnable = new Runnable() {
-            public void run() {
-                messageLabel.setText(MESSAGE + numberFound);
-            }
-        };
+        Runnable runnable = () -> messageLabel.setText(MESSAGE + numberFound);
         if(SwingUtilities.isEventDispatchThread()) {
             runnable.run();
         }
