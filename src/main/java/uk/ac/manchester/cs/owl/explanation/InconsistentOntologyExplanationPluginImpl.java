@@ -34,11 +34,11 @@ public class InconsistentOntologyExplanationPluginImpl implements InconsistentOn
 
         JOptionPane op = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
         JDialog dlg =op.createDialog("Inconsistent ontology explanation");
-        dlg.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dlg.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentHidden(ComponentEvent e) {
                 panel.dispose();
+                dlg.dispose();
             }
         });
         dlg.setModal(false);
