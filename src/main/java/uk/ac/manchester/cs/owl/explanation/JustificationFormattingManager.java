@@ -55,14 +55,21 @@ public class JustificationFormattingManager {
     }
 
     private void init(Explanation<?> explanation) {
-        ExplanationOrderer orderer = new ProtegeExplanationOrderer(OWLManager.createOWLOntologyManager());
-        ExplanationTree tree = orderer.getOrderedExplanation((OWLAxiom) explanation.getEntailment(), explanation.getAxioms());
-        List<OWLAxiom> ordering = new ArrayList<>();
         Map<OWLAxiom, Integer> im = new HashMap<>();
-        fill(tree, ordering, im);
-        indentMap.put(explanation, im);
-        orderingMap.put(explanation, ordering);
-
+        if(explanation.getSize() == 1) {
+            OWLAxiom singleAxiom = explanation.getAxioms().iterator().next();
+            im.put(singleAxiom, 0);
+            indentMap.put(explanation, im);
+            orderingMap.put(explanation, Collections.singletonList(singleAxiom));
+        }
+        else {
+            ExplanationOrderer orderer = new ProtegeExplanationOrderer(OWLManager.createOWLOntologyManager());
+            ExplanationTree tree = orderer.getOrderedExplanation((OWLAxiom) explanation.getEntailment(), explanation.getAxioms());
+            List<OWLAxiom> ordering = new ArrayList<>();
+            fill(tree, ordering, im);
+            indentMap.put(explanation, im);
+            orderingMap.put(explanation, ordering);
+        }
     }
 
     private static void fill(Tree<OWLAxiom> tree, List<OWLAxiom> ordering, Map<OWLAxiom, Integer> indentMap) {
