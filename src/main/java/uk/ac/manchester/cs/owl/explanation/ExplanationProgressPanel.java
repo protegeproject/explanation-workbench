@@ -79,6 +79,7 @@ public class ExplanationProgressPanel extends JPanel implements ExplanationProgr
         cancelled = false;
         numberFound = 0;
         cancelAction.setEnabled(true);
+        updateMessage();
     }
 
     private void updateMessage() {
