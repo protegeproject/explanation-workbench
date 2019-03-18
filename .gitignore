@@ -1,4 +1,9 @@
 target/
+META-INF/
+plugin.xml
+.settings/
+.classpath
+.project
 
 #intelliJ
 *.iws

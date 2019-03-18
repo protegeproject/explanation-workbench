@@ -64,7 +64,7 @@ public class WorkbenchPanel extends JPanel implements Disposable, OWLModelManage
 
     private AxiomSelectionModelImpl selectionModel;
 
-    private WorkbenchManager workbenchManager;
+    private final WorkbenchManager workbenchManager;
 
     private static final Logger logger = LoggerFactory.getLogger(WorkbenchPanel.class);
 

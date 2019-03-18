@@ -96,6 +96,7 @@ public class JustificationFrameExplanationDisplay extends JPanel implements Expl
 
     public void dispose() {
         frame.dispose();
+        frameList.dispose();
     }
 
     public void setDisplayLaconicExplanation(boolean b) {
