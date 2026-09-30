@@ -10,10 +10,8 @@ import org.semanticweb.owl.explanation.api.RootDerivedReasoner;
 import org.semanticweb.owl.explanation.impl.rootderived.StructuralRootDerivedReasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLException;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -68,10 +66,8 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
         if(dirty) {
             rootUnsatClses.clear();
             dirty = false;
-            OWLReasonerFactory rf = new ProtegeOWLReasonerFactoryWrapper(modelManager.getOWLReasonerManager().getCurrentReasonerFactory());
             RootDerivedReasoner gen = new StructuralRootDerivedReasoner(OWLManager.createOWLOntologyManager(),
-                                                                                    modelManager.getReasoner(),
-                                                                                    rf);
+                                                                                    modelManager.getReasoner());
             rootUnsatClses.addAll(gen.getRootUnsatisfiableClasses());
         }
         return Collections.unmodifiableSet(rootUnsatClses);
@@ -85,7 +81,7 @@ public class CachingRootDerivedGenerator implements RootDerivedReasoner, Disposa
         return Collections.emptySet();
     }
 
-    public void ontologiesChanged(List<? extends OWLOntologyChange> list) throws OWLException {
+    public void ontologiesChanged(List<? extends OWLOntologyChange> list) {
         dirty = true;
     }
 
