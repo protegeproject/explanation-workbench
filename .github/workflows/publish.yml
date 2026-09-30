@@ -1,0 +1,69 @@
+name: Publish packages to the Maven Central Repository
+
+# A release is published by pushing a tag that exactly matches the version in
+# pom.xml. Manual runs are reserved for snapshot versions.
+on:
+  push:
+    tags:
+      - '*.*.*'
+  workflow_dispatch:
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK and Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          server-id: ossrh
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_TOKEN
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+
+      # Refuse to publish when the tag and project version differ. Release tags
+      # must not start with "v" and must not identify a snapshot.
+      - name: Validate project version
+        shell: bash
+        run: |
+          set -euo pipefail
+          project_version="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            if [[ ! "${GITHUB_REF_NAME}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid release tag: ${GITHUB_REF_NAME}"
+              exit 1
+            fi
+            if [[ "${project_version}" != "${GITHUB_REF_NAME}" ]]; then
+              echo "Release tag ${GITHUB_REF_NAME} does not match project version ${project_version}"
+              exit 1
+            fi
+            if [[ "${project_version}" == *-SNAPSHOT ]]; then
+              echo "A release tag cannot publish a snapshot version"
+              exit 1
+            fi
+          elif [[ "${project_version}" != *-SNAPSHOT ]]; then
+            echo "Manual publishing is restricted to snapshot versions"
+            exit 1
+          fi
+
+      # The release profile creates source and Javadoc JARs, signs every
+      # artifact, and publishes the deployment through the Maven Central Portal.
+      - name: Publish packages
+        run: mvn --batch-mode --activate-profiles release clean deploy
+
+env:
+  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+  # Despite the OSSRH prefix, these are Maven Central Portal credentials. The
+  # existing names are retained for compatibility with our Maven configuration.
+  OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+  OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
