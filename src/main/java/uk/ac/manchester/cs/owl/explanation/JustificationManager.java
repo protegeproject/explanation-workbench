@@ -6,6 +6,7 @@ import org.protege.editor.owl.model.OWLModelManager;
 import org.semanticweb.owl.explanation.api.*;
 import org.semanticweb.owl.explanation.impl.blackbox.checker.InconsistentOntologyExplanationGeneratorFactory;
 import org.semanticweb.owl.explanation.impl.laconic.LaconicExplanationGeneratorFactory;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
@@ -18,8 +19,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import static uk.ac.manchester.cs.owl.explanation.ExplanationLogging.MARKER;
 /*
@@ -52,6 +56,9 @@ import static uk.ac.manchester.cs.owl.explanation.ExplanationLogging.MARKER;
  * Manages aspects of explanation in Protege 4.
  */
 public class JustificationManager implements Disposable, OWLReasonerProvider {
+
+    private static final Supplier<OWLOntologyManager> ONTOLOGY_MANAGER_SUPPLIER =
+            OWLManager::createOWLOntologyManager;
 
     private ExecutorService executorService;
 
@@ -172,16 +179,31 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
                 getCurrentExplanationGeneratorFactory(justificationType),
                 findAllExplanations,
                 progressDialog);
-        try {
-            executorService.submit(callable);
-        }
-        catch (ExplanationGeneratorInterruptedException e) {
-            logger.info(MARKER, "Justification computation terminated early by user");
-        }
         progressDialog.reset();
+        Future<Set<Explanation<OWLAxiom>>> future = executorService.submit(callable);
         progressDialog.setVisible(true);
 
-        HashSet<Explanation<OWLAxiom>> explanations = new HashSet<>(callable.found);
+        Set<Explanation<OWLAxiom>> explanations;
+        try {
+            explanations = future.get();
+        }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ExplanationException(e);
+        }
+        catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof ExplanationGeneratorInterruptedException) {
+                logger.info(MARKER, "Justification computation terminated early by user");
+                explanations = callable.found;
+            }
+            else if (cause instanceof ExplanationException) {
+                throw (ExplanationException) cause;
+            }
+            else {
+                throw new ExplanationException(cause);
+            }
+        }
         logger.info(MARKER, "A total of {} explanations have been computed", explanations.size());
         fireExplanationsComputed(entailment);
         logger.info(LogBanner.end());
@@ -194,22 +216,31 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         if(reasoner.isConsistent()) {
             if (type.equals(JustificationType.LACONIC)) {
                 OWLReasonerFactory rf = getReasonerFactory();
-                return ExplanationManager.createLaconicExplanationGeneratorFactory(rf, progressDialog.getProgressMonitor());
+                return ExplanationManager.createLaconicExplanationGeneratorFactory(
+                        rf,
+                        progressDialog.getProgressMonitor(),
+                        ONTOLOGY_MANAGER_SUPPLIER);
             }
             else {
                 OWLReasonerFactory rf = getReasonerFactory();
-                return ExplanationManager.createExplanationGeneratorFactory(rf, progressDialog.getProgressMonitor());
+                return ExplanationManager.createExplanationGeneratorFactory(
+                        rf,
+                        progressDialog.getProgressMonitor(),
+                        ONTOLOGY_MANAGER_SUPPLIER);
             }    
         }
         else {
             if (type.equals(JustificationType.LACONIC)) {
                 OWLReasonerFactory rf = getReasonerFactory();
-                InconsistentOntologyExplanationGeneratorFactory fac = new InconsistentOntologyExplanationGeneratorFactory(rf, Long.MAX_VALUE);
-                return new LaconicExplanationGeneratorFactory<>(fac);
+                InconsistentOntologyExplanationGeneratorFactory fac =
+                        createInconsistentOntologyExplanationGeneratorFactory(rf);
+                return new LaconicExplanationGeneratorFactory<>(
+                        fac,
+                        ONTOLOGY_MANAGER_SUPPLIER);
             }
             else {
                 OWLReasonerFactory rf = getReasonerFactory();
-                return new InconsistentOntologyExplanationGeneratorFactory(rf, Long.MAX_VALUE);
+                return createInconsistentOntologyExplanationGeneratorFactory(rf);
             }
         }
         
@@ -229,13 +260,21 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         try {
             if(modelManager.getReasoner().isConsistent()) {
                 OWLReasonerFactory rf = getReasonerFactory();
-                ExplanationGenerator<OWLAxiom> g = org.semanticweb.owl.explanation.api.ExplanationManager.createLaconicExplanationGeneratorFactory(rf).createExplanationGenerator(explanation.getAxioms());
+                ExplanationGenerator<OWLAxiom> g = ExplanationManager
+                        .createLaconicExplanationGeneratorFactory(
+                                rf,
+                                ONTOLOGY_MANAGER_SUPPLIER)
+                        .createExplanationGenerator(explanation.getAxioms());
                 return g.getExplanations(explanation.getEntailment(), limit);
             }
             else {
                 OWLReasonerFactory rf = getReasonerFactory();
-                InconsistentOntologyExplanationGeneratorFactory fac = new InconsistentOntologyExplanationGeneratorFactory(rf, Long.MAX_VALUE);
-                LaconicExplanationGeneratorFactory<OWLAxiom> lacFac = new LaconicExplanationGeneratorFactory<>(fac);
+                InconsistentOntologyExplanationGeneratorFactory fac =
+                        createInconsistentOntologyExplanationGeneratorFactory(rf);
+                LaconicExplanationGeneratorFactory<OWLAxiom> lacFac =
+                        new LaconicExplanationGeneratorFactory<>(
+                                fac,
+                                ONTOLOGY_MANAGER_SUPPLIER);
                 ExplanationGenerator<OWLAxiom> g = lacFac.createExplanationGenerator(explanation.getAxioms());
                 return g.getExplanations(explanation.getEntailment(), limit);
             }
@@ -245,6 +284,14 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         }
     }
 
+    private InconsistentOntologyExplanationGeneratorFactory
+    createInconsistentOntologyExplanationGeneratorFactory(OWLReasonerFactory reasonerFactory) {
+        return new InconsistentOntologyExplanationGeneratorFactory(
+                reasonerFactory,
+                modelManager.getOWLDataFactory(),
+                ONTOLOGY_MANAGER_SUPPLIER,
+                Long.MAX_VALUE);
+    }
 
     public void dispose() {
         rootDerivedGenerator.dispose();
@@ -314,7 +361,6 @@ public class JustificationManager implements Disposable, OWLReasonerProvider {
         public Set<Explanation<OWLAxiom>> call() throws Exception {
             found.clear();
             ExplanationGenerator<OWLAxiom> delegate = factory.createExplanationGenerator(axioms, this);
-            progressDialog.reset();
             try {
                 if (findAllExplanations) {
                     delegate.getExplanations(axiom);

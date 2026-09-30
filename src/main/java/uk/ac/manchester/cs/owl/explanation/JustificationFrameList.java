@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
@@ -87,8 +88,36 @@ public class JustificationFrameList extends OWLFrameList<Explanation<OWLAxiom>> 
         getActionMap().put(decreaseIndentation.getValue(Action.NAME), decreaseIndentation);
         getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_MASK), decreaseIndentation.getValue(Action.NAME));
 
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem copyItem = new JMenuItem("Copy justification");
+        copyItem.addActionListener(new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                copyJustificationToClipboard();
+            }
+        });
+        popupMenu.add(copyItem);
+        setComponentPopupMenu(popupMenu);
+    }
 
-
+    private void copyJustificationToClipboard() {
+        String indent = "        ";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Entailment:\n");
+        sb.append(indent);
+        OWLAxiom entailment = getRootObject().getEntailment();
+        sb.append(editorKit.getOWLModelManager().getRendering(entailment).replaceAll("\\s", " "));
+        sb.append("\n\nJustification:\n");
+        int size = getModel().getSize();
+        for (int i = 0; i < size; i++) {
+            Object element = getModel().getElementAt(i);
+            if (element instanceof JustificationFrameSectionRow) {
+                sb.append(indent);
+                sb.append(((JustificationFrameSectionRow) element).getRendering());
+                sb.append('\n');
+            }
+        }
+        StringSelection selection = new StringSelection(sb.toString());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
     }
     
     

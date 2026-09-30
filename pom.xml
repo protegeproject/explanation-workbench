@@ -2,18 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<properties>
-		<protege.version>5.0.0-beta-19</protege.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+		<protege.version>6.0.0-alpha-1</protege.version>
+		<owlapi.version>5.5.1</owlapi.version>
 	</properties>
-
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
 	
 	<groupId>edu.stanford.protege</groupId>	
 	<artifactId>explanation-workbench</artifactId>
-	<version>3.0.2-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<licenses>
@@ -42,28 +40,33 @@
 	</developers>
 	
 	<scm>
-		<connection>scm:git:git@github.com:protegeproject/explanation-workbench.git</connection>
+		<connection>scm:git:https://github.com/protegeproject/explanation-workbench.git</connection>
 		<developerConnection>scm:git:git@github.com:protegeproject/explanation-workbench.git</developerConnection>
 		<url>https://github.com/protegeproject/explanation-workbench</url>
+		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
 		<url>https://github.com/protegeproject/explanation-workbench/issues</url>
 	</issueManagement>	
 
-	<repositories>
-        <repository>
-            <id>github</id>
-            <url>https://github.com/protegeproject/mvn-repo/raw/master/releases</url>
-        </repository>
-    </repositories>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://central.sonatype.com</url>
+		</repository>
+	</distributionManagement>
     
 	<dependencies>
 
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-osgidistribution</artifactId>
-			<version>4.5.10</version>
+			<version>${owlapi.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -89,31 +92,65 @@
         </dependency>
         
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>20.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlexplanation</artifactId>
-			<version>2.0.1</version>
+			<version>5.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>telemetry</artifactId>
-			<version>2.0.0</version>
+			<version>5.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>edu.stanford.protege</groupId>
+			<artifactId>hermit-reasoner</artifactId>
+			<version>1.5.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
 	
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.4.1</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<propertiesEncoding>UTF-8</propertiesEncoding>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.3</version>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -122,7 +159,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
+				<version>3.11.2</version>
+				<configuration>
+					<doclint>none</doclint>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -137,30 +177,59 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.8.0</version>
+              <version>3.14.0</version>
               <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
+                <release>11</release>
               </configuration>
             </plugin>
 
             <plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>5.1.9</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>org.protege.editor.core.plugin.DefaultPluginActivator</Bundle-Activator>
 						<Bundle-SymbolicName>uk.ac.manchester.cs.owl.explanation;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Matthew Horridge</Bundle-Vendor>
-						<Embed-Dependency>*;scope=!provided;scope=compile|runtime;inline=false</Embed-Dependency>
+						<Embed-Dependency>
+							owlexplanation|telemetry|guava|hppcrt;
+							scope=compile|runtime;
+							inline=false
+						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
-						<Embed-Directory>target/dependency</Embed-Directory>
-						<Import-Package>*</Import-Package>
+						<Embed-Directory>lib</Embed-Directory>
+						<Import-Package>
+							org.protege.editor.core.*;version="[6.0.0,7.0.0)",
+							org.protege.editor.owl.*;version="[6.0.0,7.0.0)",
+							com.google.appengine.*;resolution:=optional,
+							com.google.apphosting.*;resolution:=optional,
+							com.google.errorprone.annotations.*;resolution:=optional,
+							*
+						</Import-Package>
+						<Export-Package>!*</Export-Package>
+						<Private-Package>uk.ac.manchester.cs.owl.explanation</Private-Package>
 					</instructions>
               </configuration>
             </plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.1.4</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.1.4</version>
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -172,7 +241,7 @@
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-gpg-plugin</artifactId>
-							<version>1.5</version>
+							<version>3.2.7</version>
 							<executions>
 								<execution>
 									<id>sign-artifacts</id>
@@ -185,23 +254,14 @@
 						</plugin>
 
 						<plugin>
-							<groupId>org.sonatype.plugins</groupId>
-							<artifactId>nexus-staging-maven-plugin</artifactId>
-							<version>1.6.6</version>
+							<groupId>org.sonatype.central</groupId>
+							<artifactId>central-publishing-maven-plugin</artifactId>
+							<version>0.9.0</version>
 							<extensions>true</extensions>
-							<executions>
-								<execution>
-									<id>default-deploy</id>
-									<phase>deploy</phase>
-									<goals>
-										<goal>deploy</goal>
-									</goals>
-								</execution>
-							</executions>
 							<configuration>
-								<serverId>ossrh</serverId>
-								<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-								<autoReleaseAfterClose>true</autoReleaseAfterClose>
+								<publishingServerId>ossrh</publishingServerId>
+								<autoPublish>true</autoPublish>
+								<waitUntil>published</waitUntil>
 							</configuration>
 						</plugin>
 
